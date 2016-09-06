@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssm.project.dao.UserMapper">
+	<resultMap id="BaseResultMap" type="com.ssm.project.model.User">
+		<id column="U_ID" property="uId" jdbcType="DECIMAL" />
+		<result column="UNAME" property="uname" jdbcType="VARCHAR" />
+		<result column="NICKNAME" property="nickname" jdbcType="VARCHAR" />
+		<result column="UPASSWORD" property="upassword" jdbcType="VARCHAR" />
+		<result column="USEX" property="usex" jdbcType="VARCHAR" />
+		<result column="UAGE" property="uage" jdbcType="DECIMAL" />
+		<result column="UTELEPHONE" property="utelephone" jdbcType="VARCHAR" />
+		<result column="UADDRESS" property="uaddress" jdbcType="VARCHAR" />
+		<result column="ROLE" property="role" jdbcType="VARCHAR" />
+		<result column="ISDELETED" property="isdeleted" jdbcType="DECIMAL" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem" open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem" open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		U_ID, UNAME, NICKNAME, UPASSWORD, USEX, UAGE, UTELEPHONE, UADDRESS, ROLE, ISDELETED
+	</sql>
+	<select id="login" parameterType="com.ssm.project.model.User" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from USERS where 1=1
+		<if test=" uId != null">
+			and u_id = #{uId}
+		</if>
+		<if test="upassword != null">
+			and upassword = #{upassword}
+		</if>
+	</select>
+	<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ssm.project.model.UserExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from USERS
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from USERS
+		where U_ID = #{uId,jdbcType=DECIMAL}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+		delete from USERS
+		where U_ID = #{uId,jdbcType=DECIMAL}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.ssm.project.model.UserExample">
+		delete from USERS
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+	<insert id="insert" parameterType="com.ssm.project.model.User">
+  	    <![CDATA[ 
+		    insert into USERS (U_ID, UNAME, NICKNAME, 
+		      UPASSWORD, USEX, UAGE, 
+		      UTELEPHONE, UADDRESS, ROLE, 
+		      ISDELETED)
+		    values (seq_user.nextval, #{uname,jdbcType=VARCHAR}, #{nickname,jdbcType=VARCHAR}, 
+		      #{upassword,jdbcType=VARCHAR}, #{usex,jdbcType=VARCHAR}, #{uage,jdbcType=DECIMAL}, 
+		      #{utelephone,jdbcType=VARCHAR}, #{uaddress,jdbcType=VARCHAR}, #{role,jdbcType=VARCHAR}, 
+		      #{isdeleted,jdbcType=DECIMAL})
+        ]]>
+		<selectKey resultType="java.lang.Integer" keyProperty="uId">
+			SELECT seq_user.CURRVAL AS U_ID FROM DUAL
+		</selectKey>
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.ssm.project.model.User">
+		insert into USERS
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="uId != null">
+				U_ID,
+			</if>
+			<if test="uname != null">
+				UNAME,
+			</if>
+			<if test="nickname != null">
+				NICKNAME,
+			</if>
+			<if test="upassword != null">
+				UPASSWORD,
+			</if>
+			<if test="usex != null">
+				USEX,
+			</if>
+			<if test="uage != null">
+				UAGE,
+			</if>
+			<if test="utelephone != null">
+				UTELEPHONE,
+			</if>
+			<if test="uaddress != null">
+				UADDRESS,
+			</if>
+			<if test="role != null">
+				ROLE,
+			</if>
+			<if test="isdeleted != null">
+				ISDELETED,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="uId != null">
+				#{uId,jdbcType=DECIMAL},
+			</if>
+			<if test="uname != null">
+				#{uname,jdbcType=VARCHAR},
+			</if>
+			<if test="nickname != null">
+				#{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="upassword != null">
+				#{upassword,jdbcType=VARCHAR},
+			</if>
+			<if test="usex != null">
+				#{usex,jdbcType=VARCHAR},
+			</if>
+			<if test="uage != null">
+				#{uage,jdbcType=DECIMAL},
+			</if>
+			<if test="utelephone != null">
+				#{utelephone,jdbcType=VARCHAR},
+			</if>
+			<if test="uaddress != null">
+				#{uaddress,jdbcType=VARCHAR},
+			</if>
+			<if test="role != null">
+				#{role,jdbcType=VARCHAR},
+			</if>
+			<if test="isdeleted != null">
+				#{isdeleted,jdbcType=DECIMAL},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.ssm.project.model.UserExample" resultType="java.lang.Integer">
+		select count(*) from USERS
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update USERS
+		<set>
+			<if test="record.uId != null">
+				U_ID = #{record.uId,jdbcType=DECIMAL},
+			</if>
+			<if test="record.uname != null">
+				UNAME = #{record.uname,jdbcType=VARCHAR},
+			</if>
+			<if test="record.nickname != null">
+				NICKNAME = #{record.nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="record.upassword != null">
+				UPASSWORD = #{record.upassword,jdbcType=VARCHAR},
+			</if>
+			<if test="record.usex != null">
+				USEX = #{record.usex,jdbcType=VARCHAR},
+			</if>
+			<if test="record.uage != null">
+				UAGE = #{record.uage,jdbcType=DECIMAL},
+			</if>
+			<if test="record.utelephone != null">
+				UTELEPHONE = #{record.utelephone,jdbcType=VARCHAR},
+			</if>
+			<if test="record.uaddress != null">
+				UADDRESS = #{record.uaddress,jdbcType=VARCHAR},
+			</if>
+			<if test="record.role != null">
+				ROLE = #{record.role,jdbcType=VARCHAR},
+			</if>
+			<if test="record.isdeleted != null">
+				ISDELETED = #{record.isdeleted,jdbcType=DECIMAL},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update USERS
+		set U_ID = #{record.uId,jdbcType=DECIMAL},
+		UNAME = #{record.uname,jdbcType=VARCHAR},
+		NICKNAME =
+		#{record.nickname,jdbcType=VARCHAR},
+		UPASSWORD = #{record.upassword,jdbcType=VARCHAR},
+		USEX = #{record.usex,jdbcType=VARCHAR},
+		UAGE = #{record.uage,jdbcType=DECIMAL},
+		UTELEPHONE = #{record.utelephone,jdbcType=VARCHAR},
+		UADDRESS =
+		#{record.uaddress,jdbcType=VARCHAR},
+		ROLE = #{record.role,jdbcType=VARCHAR},
+		ISDELETED = #{record.isdeleted,jdbcType=DECIMAL}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ssm.project.model.User">
+		update USERS
+		<set>
+			<if test="uname != null">
+				UNAME = #{uname,jdbcType=VARCHAR},
+			</if>
+			<if test="nickname != null">
+				NICKNAME = #{nickname,jdbcType=VARCHAR},
+			</if>
+			<if test="upassword != null">
+				UPASSWORD = #{upassword,jdbcType=VARCHAR},
+			</if>
+			<if test="usex != null">
+				USEX = #{usex,jdbcType=VARCHAR},
+			</if>
+			<if test="uage != null">
+				UAGE = #{uage,jdbcType=DECIMAL},
+			</if>
+			<if test="utelephone != null">
+				UTELEPHONE = #{utelephone,jdbcType=VARCHAR},
+			</if>
+			<if test="uaddress != null">
+				UADDRESS = #{uaddress,jdbcType=VARCHAR},
+			</if>
+			<if test="role != null">
+				ROLE = #{role,jdbcType=VARCHAR},
+			</if>
+			<if test="isdeleted != null">
+				ISDELETED = #{isdeleted,jdbcType=DECIMAL},
+			</if>
+		</set>
+		where U_ID = #{uId,jdbcType=DECIMAL}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ssm.project.model.User">
+		update USERS
+		set UNAME = #{uname,jdbcType=VARCHAR},
+		NICKNAME =
+		#{nickname,jdbcType=VARCHAR},
+		UPASSWORD = #{upassword,jdbcType=VARCHAR},
+		USEX = #{usex,jdbcType=VARCHAR},
+		UAGE =
+		#{uage,jdbcType=DECIMAL},
+		UTELEPHONE = #{utelephone,jdbcType=VARCHAR},
+		UADDRESS = #{uaddress,jdbcType=VARCHAR},
+		ROLE =
+		#{role,jdbcType=VARCHAR},
+		ISDELETED = #{isdeleted,jdbcType=DECIMAL}
+		where U_ID = #{uId,jdbcType=DECIMAL}
+	</update>
+</mapper>

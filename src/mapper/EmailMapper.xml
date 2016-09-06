@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ssm.project.dao.EmailMapper">
+	<resultMap id="BaseResultMap" type="com.ssm.project.model.Email">
+		<id column="E_ID" property="eId" jdbcType="INTEGER" />
+		<result column="RECIPIENTS" property="recipients" jdbcType="VARCHAR" />
+		<result column="TITLE" property="title" jdbcType="VARCHAR" />
+		<result column="CONTENT" property="content" jdbcType="VARCHAR" />
+		<result column="SENDER" property="sender" jdbcType="VARCHAR" />
+		<result column="ACCESSORY" property="accessory" jdbcType="VARCHAR" />
+		<result column="ISREAD" property="isread" jdbcType="VARCHAR" />
+		<result column="TIME" property="time" jdbcType="VARCHAR" />
+		<result column="ISDELETED" property="isdeleted" jdbcType="INTEGER" />
+	</resultMap>
+	<sql id="Example_Where_Clause">
+		<where>
+			<foreach collection="oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem" open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Update_By_Example_Where_Clause">
+		<where>
+			<foreach collection="example.oredCriteria" item="criteria" separator="or">
+				<if test="criteria.valid">
+					<trim prefix="(" suffix=")" prefixOverrides="and">
+						<foreach collection="criteria.criteria" item="criterion">
+							<choose>
+								<when test="criterion.noValue">
+									and ${criterion.condition}
+								</when>
+								<when test="criterion.singleValue">
+									and ${criterion.condition} #{criterion.value}
+								</when>
+								<when test="criterion.betweenValue">
+									and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+								</when>
+								<when test="criterion.listValue">
+									and ${criterion.condition}
+									<foreach collection="criterion.value" item="listItem" open="(" close=")" separator=",">
+										#{listItem}
+									</foreach>
+								</when>
+							</choose>
+						</foreach>
+					</trim>
+				</if>
+			</foreach>
+		</where>
+	</sql>
+	<sql id="Base_Column_List">
+		E_ID, RECIPIENTS, TITLE, CONTENT, SENDER, ACCESSORY, ISREAD, TIME, ISDELETED
+	</sql>
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="int">
+		select
+		<include refid="Base_Column_List" />
+		from EMAIL
+		where E_ID = #{eId,jdbcType=INTEGER}
+	</select>
+	<delete id="deleteByPrimaryKey" parameterType="int">
+		delete from EMAIL
+		where E_ID = #{eId,jdbcType=INTEGER}
+	</delete>
+	<delete id="deleteByExample" parameterType="com.ssm.project.model.EmailExample">
+		delete from EMAIL
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</delete>
+
+	<!-- <insert id="insert" parameterType="com.ssm.project.model.Email"> <![CDATA[ insert into EMAIL (E_ID, RECIPIENTS, TITLE, CONTENT, 
+		SENDER, ACCESSORY, ISREAD, TIME, ISDELETED ) values (sys_guid(), #{recipients}, #{title}, #{content}, #{sender}, #{accessory}, #{isread}, 
+		#{time}, #{isdeleted} ) ]]> </insert> -->
+	<insert id="insert" parameterType="com.ssm.project.model.Email"> 
+		<![CDATA[ insert into EMAIL (E_ID, RECIPIENTS, TITLE, CONTENT, 
+			SENDER, ACCESSORY, ISREAD, TIME, ISDELETED ) values (seq_email.nextval, #{recipients}, #{title}, #{content}, #{sender}, #{accessory}, 
+			#{isread}, #{time}, #{isdeleted} ) 
+		
+		]]>
+		<selectKey resultType="java.lang.Integer" keyProperty="eId">
+			SELECT seq_email.CURRVAL AS E_ID FROM DUAL
+		</selectKey>
+	</insert>
+
+	<insert id="insertSelective" parameterType="com.ssm.project.model.Email">
+		insert into EMAIL
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="eId != null">
+				E_ID,
+			</if>
+			<if test="recipients != null">
+				RECIPIENTS,
+			</if>
+			<if test="title != null">
+				TITLE,
+			</if>
+			<if test="content != null">
+				CONTENT,
+			</if>
+			<if test="sender != null">
+				SENDER,
+			</if>
+			<if test="accessory != null">
+				ACCESSORY,
+			</if>
+			<if test="isread != null">
+				ISREAD,
+			</if>
+			<if test="time != null">
+				TIME,
+			</if>
+			<if test="isdeleted != null">
+				ISDELETED,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="eId != null">
+				#{eId,jdbcType=INTEGER},
+			</if>
+			<if test="recipients != null">
+				#{recipients,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				#{title,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				#{content,jdbcType=VARCHAR},
+			</if>
+			<if test="sender != null">
+				#{sender,jdbcType=VARCHAR},
+			</if>
+			<if test="accessory != null">
+				#{accessory,jdbcType=VARCHAR},
+			</if>
+			<if test="isread != null">
+				#{isread,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				#{time,jdbcType=VARCHAR},
+			</if>
+			<if test="isdeleted != null">
+				#{isdeleted,jdbcType=INTEGER},
+			</if>
+		</trim>
+	</insert>
+	<select id="countByExample" parameterType="com.ssm.project.model.EmailExample" resultType="int">
+		select count(*) from EMAIL
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+	</select>
+	<update id="updateByExampleSelective" parameterType="map">
+		update EMAIL
+		<set>
+			<if test="record.eId != null">
+				E_ID = #{record.eId,jdbcType=INTEGER},
+			</if>
+			<if test="record.recipients != null">
+				RECIPIENTS = #{record.recipients,jdbcType=VARCHAR},
+			</if>
+			<if test="record.title != null">
+				TITLE = #{record.title,jdbcType=VARCHAR},
+			</if>
+			<if test="record.content != null">
+				CONTENT = #{record.content,jdbcType=VARCHAR},
+			</if>
+			<if test="record.sender != null">
+				SENDER = #{record.sender,jdbcType=VARCHAR},
+			</if>
+			<if test="record.accessory != null">
+				ACCESSORY = #{record.accessory,jdbcType=VARCHAR},
+			</if>
+			<if test="record.isread != null">
+				ISREAD = #{record.isread,jdbcType=VARCHAR},
+			</if>
+			<if test="record.time != null">
+				TIME = #{record.time,jdbcType=VARCHAR},
+			</if>
+			<if test="record.isdeleted != null">
+				ISDELETED = #{record.isdeleted,jdbcType=INTEGER},
+			</if>
+		</set>
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByExample" parameterType="map">
+		update EMAIL
+		set E_ID = #{record.eId,jdbcType=INTEGER},
+		RECIPIENTS = #{record.recipients,jdbcType=VARCHAR},
+		TITLE =
+		#{record.title,jdbcType=VARCHAR},
+		CONTENT = #{record.content,jdbcType=VARCHAR},
+		SENDER = #{record.sender,jdbcType=VARCHAR},
+		ACCESSORY = #{record.accessory,jdbcType=VARCHAR},
+		ISREAD = #{record.isread,jdbcType=VARCHAR},
+		TIME =
+		#{record.time,jdbcType=VARCHAR},
+		ISDELETED = #{record.isdeleted,jdbcType=INTEGER}
+		<if test="_parameter != null">
+			<include refid="Update_By_Example_Where_Clause" />
+		</if>
+	</update>
+	<update id="updateByPrimaryKeySelective" parameterType="com.ssm.project.model.Email">
+		update EMAIL
+		<set>
+			<if test="recipients != null">
+				RECIPIENTS = #{recipients,jdbcType=VARCHAR},
+			</if>
+			<if test="title != null">
+				TITLE = #{title,jdbcType=VARCHAR},
+			</if>
+			<if test="content != null">
+				CONTENT = #{content,jdbcType=VARCHAR},
+			</if>
+			<if test="sender != null">
+				SENDER = #{sender,jdbcType=VARCHAR},
+			</if>
+			<if test="accessory != null">
+				ACCESSORY = #{accessory,jdbcType=VARCHAR},
+			</if>
+			<if test="isread != null">
+				ISREAD = #{isread,jdbcType=VARCHAR},
+			</if>
+			<if test="time != null">
+				TIME = #{time,jdbcType=VARCHAR},
+			</if>
+			<if test="isdeleted != null">
+				ISDELETED = #{isdeleted,jdbcType=INTEGER},
+			</if>
+		</set>
+		where E_ID = #{eId,jdbcType=INTEGER}
+	</update>
+	<update id="updateByPrimaryKey" parameterType="com.ssm.project.model.Email">
+		update EMAIL
+		set RECIPIENTS = #{recipients,jdbcType=VARCHAR},
+		TITLE =
+		#{title,jdbcType=VARCHAR},
+		CONTENT = #{content,jdbcType=VARCHAR},
+		SENDER = #{sender,jdbcType=VARCHAR},
+		ACCESSORY =
+		#{accessory,jdbcType=VARCHAR},
+		ISREAD = #{isread,jdbcType=VARCHAR},
+		TIME = #{time,jdbcType=VARCHAR},
+		ISDELETED =
+		#{isdeleted,jdbcType=INTEGER}
+		where E_ID = #{eId,jdbcType=INTEGER}
+	</update>
+	<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ssm.project.model.EmailExample">
+		select
+		<if test="distinct">
+			distinct
+		</if>
+		<include refid="Base_Column_List" />
+		from EMAIL
+		<if test="_parameter != null">
+			<include refid="Example_Where_Clause" />
+		</if>
+		<if test="orderByClause != null">
+			order by ${orderByClause}
+		</if>
+	</select>
+</mapper>
